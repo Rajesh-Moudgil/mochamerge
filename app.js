@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const argv = require('minimist')(process.argv.slice(2));
 const fs=require('fs');
 const path = require('path');
@@ -7,7 +9,7 @@ const f = require('./lib/files.js');
 const mUtils = require('./lib/mocha-utils.js');
 
 console.log(argv);
-let argsValidated=true;
+let argsValidated=false;
 let error=null;
 
 if(argv._ && argv._.length > 0 && argv._.length < 3){
@@ -16,7 +18,7 @@ if(argv._ && argv._.length > 0 && argv._.length < 3){
         && (argv.o.length > 2);
     
     if(! argsValidated){
-        argsValidated = argv._.length === 2 ;
+        argsValidated = (argv._.length === 2) || (argv._.length === 3)  ;
     }
 
 }
