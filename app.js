@@ -18,7 +18,7 @@ if(argv._ && argv._.length > 0 && argv._.length < 3){
         && (argv.o.length > 2);
     
     if(! argsValidated){
-        argsValidated = (argv._.length === 2) || (argv._.length === 3)  ;
+        argsValidated = argv._.length === 2 ;
     }
 
 }
@@ -30,8 +30,7 @@ if(!argsValidated){
     if(argv._.length === 1){
         extractTestSuites(argv._[0],argv.e,argv.o);
     } else {
-        let outputFilename = argv._.length === 3 ? argv._[2]:argv._[0];
-        mergeMochaJsonReports(argv._[0],argv._[1], outputFilename )
+        mergeMochaJsonReports(argv._[0],argv._[1], argv.o ? argv.o : argv._[0] );
     }
 }
 
