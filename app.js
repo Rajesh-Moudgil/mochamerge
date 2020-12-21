@@ -56,7 +56,7 @@ function extractTestSuites(filename, type, dir){
     if(!f.isDir(dir)){
         throw new Error("Output directory '"+dir+"' is not accessible or not a directory.");
     }
-
+ 
     let report = mUtils.getReportFromFile(filename);
     mUtils.traverseSuites(report.results,(sts,i,s) =>{
         if( (type === 'failed' && mUtils.hasSuiteFailures(s))
