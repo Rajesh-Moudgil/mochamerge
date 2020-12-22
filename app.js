@@ -7,42 +7,67 @@ const { min, max } = require('lodash');
 const { TestReport, Test, Suite } = require('mochawesome-report-generator/bin/types.js');
 const f = require('./lib/files.js');
 const mUtils = require('./lib/mocha-utils.js');
+const appUtils = require('./lib/app-utils.js');
 
-console.log(argv);
-let argsValidated = false;
-let error = null;
+try {
+    if (appUtils.isValidCommand(argv)) {
+        let cmd = appUtils.getOperation(argv);
+        console.log(cmd);
+        switch (cmd.operation) {
+            case 'merge':
+                mergeMochaJsonReports(cmd.options.mainFile,
+                    cmd.options.secondFile,
+                    cmd.options.outputFile);
+                    console.log('Merge completed successfully.');
+                    break;
+                    case 'extract':
+                        extractTestSuites(cmd.options.file,
+                            cmd.options.type,
+                            cmd.options.outputDir);
+                            console.log('Extract completed successfully.');
+                break;
 
-if (argv._ && argv._.length > 0 && argv._.length < 3) {
-    argsValidated = argv._.length === 1 && argv.e && argv.o
-        && (argv.e === 'failed' || argv.e === 'skipped')
-        && (argv.o.length > 2);
-
-    if (!argsValidated) {
-        argsValidated = argv._.length === 2;
-    }
-
-}
-
-if (!argsValidated) {
-    showErrorUsage();
-} else {
-    // proceed if all is good
-    if (argv._.length === 1) {
-        extractTestSuites(argv._[0], argv.e, argv.o);
+            default:
+                showErrorUsage("Internal error.");
+                process.exit(1);
+                break;
+        }
     } else {
-        mergeMochaJsonReports(argv._[0], argv._[1], argv.o ? argv.o : argv._[0]);
+        showErrorUsage('Invalid command.');
+        process.exit(1);
     }
+} catch(e) {
+    console.error("Some internal problem caused a fatal error. "+e.message?e.message:'');
 }
 
-function showErrorUsage() {
-    console.error(` ERROR in command...
+// console.log(argv);
+// let argsValidated = false;
+// let error = null;
 
-    USAGE:
-        Extract failed or skipped test suites to another directory:
-            mochamerge <input json filename> -e <failed | skipped> -o <output dir>
-        Merge 2 reports
-            mochamerge <main json report> <second json report> [-o <output filename>]
-    `);
+// if (argv._ && argv._.length > 0 && argv._.length < 3) {
+//     argsValidated = argv._.length === 1 && argv.e && argv.o
+//         && (argv.e === 'failed' || argv.e === 'skipped')
+//         && (argv.o.length > 2);
+
+//     if (!argsValidated) {
+//         argsValidated = argv._.length === 2;
+//     }
+
+// }
+
+// if (!argsValidated) {
+//     showErrorUsage();
+// } else {
+//     // proceed if all is good
+//     if (argv._.length === 1) {
+//         extractTestSuites(argv._[0], argv.e, argv.o);
+//     } else {
+//         mergeMochaJsonReports(argv._[0], argv._[1], argv.o ? argv.o : argv._[0]);
+//     }
+// }
+
+function showErrorUsage(errMsg) {
+    console.error(errMsg + appUtils.getUsageMessage());
 };
 
 
@@ -133,7 +158,7 @@ function mergeMochaJsonReports(mainFile, secondFile, outputFile) {
 
     console.log(stats);
     mainReport.stats = stats;
-    f.writeFile(outputFile, JSON.stringify(mainReport));
+    f.writeFile(outputFile, JSON.stringify(mainReport,null,4));
 }
 
 // let totalSuites=0;
