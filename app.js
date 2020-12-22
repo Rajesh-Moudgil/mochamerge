@@ -18,13 +18,13 @@ try {
                 mergeMochaJsonReports(cmd.options.mainFile,
                     cmd.options.secondFile,
                     cmd.options.outputFile);
-                    console.log('Merge completed successfully.');
-                    break;
-                    case 'extract':
-                        extractTestSuites(cmd.options.file,
-                            cmd.options.type,
-                            cmd.options.outputDir);
-                            console.log('Extract completed successfully.');
+                console.log('Merge completed successfully.');
+                break;
+            case 'extract':
+                extractTestSuites(cmd.options.file,
+                    cmd.options.type,
+                    cmd.options.outputDir);
+                console.log('Extract completed successfully.');
                 break;
 
             default:
@@ -36,8 +36,8 @@ try {
         showErrorUsage('Invalid command.');
         process.exit(1);
     }
-} catch(e) {
-    console.error("Some internal problem caused a fatal error. "+e.message?e.message:'');
+} catch (e) {
+    console.error("Some internal problem caused a fatal error. " + e.message ? e.message : '');
 }
 
 // console.log(argv);
@@ -158,7 +158,7 @@ function mergeMochaJsonReports(mainFile, secondFile, outputFile) {
 
     console.log(stats);
     mainReport.stats = stats;
-    f.writeFile(outputFile, JSON.stringify(mainReport,null,4));
+    f.writeFile(outputFile, JSON.stringify(mainReport, null, 4));
 }
 
 // let totalSuites=0;
